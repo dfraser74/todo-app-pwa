@@ -18,8 +18,6 @@ export default {
   },
   form: {
     marginRight: 5,
-    display: 'flex',
-    flexDirection: 'column',
   },
   headerForm: {
     fontSize: 13,
@@ -70,6 +68,8 @@ export default {
     textTransform: 'uppercase',
   },
   progress: {
+    display: 'flex',
+    margin: 'auto',
     alignSelf: 'center',
   },
 };

@@ -11,6 +11,7 @@ module.exports = new ManifestPlugin({
     "orientation": "portrait",
     "scope": "/",
     "start_url": "/",
+    "gcm_sender_id": process.env.GCM_SENDER_ID || '370430411435',
     "icons": [
       {
         "src": "/icons/android-chrome-36x36.png",

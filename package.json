@@ -7,7 +7,6 @@
   },
   "author": "GoldenOwlAsia",
   "license": "MIT",
-  "homepage": "https://github.com/GoldenOwlAsia/todo-app-pwa",
   "dependencies": {
     "firebase": "^3.9.0",
     "intl": "^1.2.5",

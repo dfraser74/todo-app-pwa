@@ -14,6 +14,8 @@ function getClientEnvironment(publicUrl) {
       // Useful for determining whether we’re running in production mode.
       // Most importantly, it switches React into the correct mode.
       NODE_ENV: process.env.NODE_ENV || 'development',
+      GCM_SENDER_ID: process.env.GCM_SENDER_ID || '370430411435',
+      SERVER_HOST: process.env.SERVER_HOST || 'http://localhost:3005',
       // Useful for resolving the correct path to static assets in `public`.
       // For example, <img src={process.env.PUBLIC_URL + '/img/logo.png'} />.
       // This should only be used as an escape hatch. Normally you would put

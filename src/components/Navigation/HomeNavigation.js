@@ -15,6 +15,7 @@ const IntlPolyfill = require('intl');
 DateTimeFormat = IntlPolyfill.DateTimeFormat;
 require('intl/locale-data/jsonp/en');
 require('intl/locale-data/jsonp/en-US');
+import DrawerService from '../../services/drawer';
 
 const styles = {
   navigation: {
@@ -69,6 +70,7 @@ class HomeNavigation extends Component {
         iconElementLeft={<IconButton><MdMenu size={24} color={'#D8D8D8'} /></IconButton>}
         iconElementRight={<IconButton><ContentAdd color={'#D8D8D8'} /></IconButton>}
         onRightIconButtonTouchTap={() => (this.props.history.push('/new-task'))}
+        onLeftIconButtonTouchTap={() => DrawerService.onOpen()}
       />
     );
   }

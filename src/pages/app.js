@@ -10,6 +10,7 @@ import Register from './Register';
 import NewTask from './NewTask';
 import NotFound from './NotFound';
 import UserService from '../services/user';
+import LeftNavigation from '../components/Navigation/LeftNavigation';
 
 @observer
 class App extends Component {
@@ -33,17 +34,12 @@ class App extends Component {
     const isLoaded = !!UserService.isLoaded;
     if (!isLoaded)
       return (
-        <CircularProgress
-          size={60}
-          thickness={3}
-          style={{
-            flex: 1,
-            display: 'flex',
-            alignSelf: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        />
+        <div className="overlay-waiting">
+          <CircularProgress
+            size={60}
+            thickness={3}
+          />
+        </div>
       );
 
     const isLogin = !!UserService.info.uid;
@@ -57,6 +53,7 @@ class App extends Component {
       <Router>
         <div>
           {this.renderWithAuthenticated}
+          <LeftNavigation />
         </div>
       </Router>
     );

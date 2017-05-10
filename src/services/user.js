@@ -22,7 +22,7 @@ class User {
   }
 
   onLogout() {
-    auth.signOut();
+    return auth.signOut();
   }
 
   onRegister({email, password, displayName}, callback) {
@@ -56,6 +56,8 @@ auth.onAuthStateChanged((user) => {
   if (user !== null && !user.isAnonymous) {
     const info = fields.reduce((obj, item) => ({ ...obj, [item]: user[item] }), {});
     currentUser.info = {...info};
+  } else {
+    currentUser.info = {};
   }
   currentUser.isLoaded = true;
 })

@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import Home from './Home';
 import Login from './Login';
 import Register from './Register';
+import NewTask from './NewTask';
 import NotFound from './NotFound';
 import UserService from '../services/user';
 
@@ -15,6 +16,7 @@ class App extends Component {
   renderAuthenticated() {
     return [
       <Route exact path="/" key="home" component={Home} />,
+      <Route path="/new-task" key="new-task" component={NewTask} />,
       <Route path="/404" key="not-found" component={NotFound} />,
     ];
   }

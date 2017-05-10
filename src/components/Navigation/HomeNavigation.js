@@ -3,43 +3,75 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import MdMenu from 'react-icons/lib/md/menu';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import HardwareKeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
+import TaskService from '../../services/task';
+import { observer } from 'mobx-react';
+import DatePicker from 'material-ui/DatePicker';
+
+let DateTimeFormat;
+
+const IntlPolyfill = require('intl');
+DateTimeFormat = IntlPolyfill.DateTimeFormat;
+require('intl/locale-data/jsonp/en');
+require('intl/locale-data/jsonp/en-US');
 
 const styles = {
   navigation: {
     width: '100%',
-    background: '#FFF'
+    maxWidth: 400,
+    background: '#FFF',
+    margin: '0 auto'
   },
   titleNavBar: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     color: '#1D1D26'
-  },
-  btnArrowDown: {
-    alignSelf: 'center'
-  },
-  greyColour: {
-    color: '#D8D8D8'
   }
 }
 
+@observer
 class HomeNavigation extends Component {
+  static propTypes = {
+    match: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
+
   render() {
     return(
       <AppBar
         style={styles.navigation}
         title={
-          <div style={styles.titleNavBar}>
-            <span style={{fontSize: '20px'}}>May 2015</span>
-            <HardwareKeyboardArrowDown style={styles.btnArrowDown} color={'#D8D8D8'} />
-          </div>
+          <DatePicker
+            fullWidth
+            hintText="Date"
+            style={{
+              maxWidth: '100%'
+            }}
+            textFieldStyle={{
+              fontSize: 23,
+              width: '50%',
+              margin: '0 25%'
+            }}
+            formatDate={new DateTimeFormat('en-US', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            }).format}
+            onChange={(e, date) => {
+              TaskService.findByDate(date)
+            }}
+            defaultDate={new Date()}
+          />
         }
         iconElementLeft={<IconButton><MdMenu size={24} color={'#D8D8D8'} /></IconButton>}
         iconElementRight={<IconButton><ContentAdd color={'#D8D8D8'} /></IconButton>}
+        onRightIconButtonTouchTap={() => (this.props.history.push('/new-task'))}
       />
     );
   }
 }
 
-export default HomeNavigation;
+export default withRouter(HomeNavigation);

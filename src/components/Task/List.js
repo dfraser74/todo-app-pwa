@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {List, ListItem} from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import { observer } from 'mobx-react';
 import Avatar from 'material-ui/Avatar';
@@ -24,12 +23,12 @@ const styles = {
   },
   nameItem: {
     color: '#1D1D26',
-    fontSize: 20
+    fontSize: 22
   },
   timeLocation: {
     display: 'flex',
     alignItems: 'center',
-    opacity: 0.7,
+    opacity: 0.8,
     padding: '3px 0'
   }
 };
@@ -46,16 +45,16 @@ class Lists extends Component {
   }
 
   renderItemContent(task) {
-    const { description, category, timestart, timeend, location } = task;
+    const { description, category, starttime, endtime, location } = task;
 
     return (
       <div style={{height: 'initial'}}>
         <div style={styles.timeLocation}>
-          <span style={{display: 'flex'}}><FaIconClock />&nbsp;{timestart} – {timeend} &nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span style={{display: 'flex'}}><FaIconClock />&nbsp;{starttime} – {endtime} &nbsp;&nbsp;&nbsp;&nbsp;</span>
           <span style={{display: 'flex'}}><MdLocationOn />&nbsp;{location}</span>
         </div>
         <div style={{display: 'flex'}}>{category}</div>
-        <div style={{color: '#1D1D26', opacity: '0.8'}}>{description}</div>
+        <div style={{color: '#1D1D26', opacity: '0.8', fontSize: 18}}>{description}</div>
       </div>
     );
   }
@@ -65,7 +64,7 @@ class Lists extends Component {
   }
 
   renderTask(task, key) {
-    const { name, description, timestart, timeend, location } = task;
+    const { name, description, starttime, endtime, location } = task;
     const category = null;
 
     return (
@@ -78,7 +77,7 @@ class Lists extends Component {
           }
           secondaryTextLines={2}
           rightIconButton={this.renderItemRight(key)}
-          secondaryText={this.renderItemContent({ category, name, description, timestart, timeend, location })}
+          secondaryText={this.renderItemContent({ category, name, description, starttime, endtime, location })}
 
           rightAvatar={<Avatar src="http://www.material-ui.com/images/ok-128.jpg" />}
         />,
@@ -89,13 +88,11 @@ class Lists extends Component {
 
   render() {
     const { completed } = this.props
-    const subTitle = !!completed ? 'Completed' : 'Uncompleted';
+    const subTitle = !!completed ? 'Completed' : 'UnCompleted';
     const tasks = TaskService[subTitle] || {};
 
     return (
       <List style={styles.containerList}>
-        {/*<Subheader style={styles.subheader}>{subTitle}</Subheader>
-        <Divider />*/}
         {Object.keys(tasks).map((key) => this.renderTask(tasks[key], key))}
       </List>
     )

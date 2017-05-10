@@ -1,13 +1,12 @@
 import { observable, computed } from 'mobx';
 import { database } from '../db/firebase';
+import moment from 'moment';
 
 class Task {
   @observable taskList = {};
 
   constructor() {
-    database.ref('tasks').on('value', (snapshot) => {
-      this.taskList = snapshot.val() || {};
-    });
+    this.findByDate()
   }
 
   @computed get Completed() {
@@ -34,6 +33,24 @@ class Task {
         .filter(key => !taskList[key].completed)
         .reduce((obj, key) => ({ ...obj, [key]: taskList[key] }),{})
     );
+  }
+
+  @computed get lengthUncompleted() {
+    return Object.keys(this.UnCompleted).length;
+  }
+
+  @computed get lengthCompleted() {
+    return Object.keys(this.Completed).length;
+  }
+
+  findByDate(date) {
+    const current = moment(date).format('MMMM DD, YYYY')
+    return new Promise((resolve, reject) => {
+      database.ref('/tasks').orderByChild('date').equalTo(current).on('value', (snapshot) => {
+        this.taskList = snapshot.val() || {};
+        resolve(this.taskList);
+      });
+    })
   }
 
   onToggle(key, value) {

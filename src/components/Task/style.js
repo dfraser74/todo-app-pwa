@@ -3,7 +3,6 @@ export default {
     flex: 1,
     padding: 40,
     display: 'flex',
-    alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
   },

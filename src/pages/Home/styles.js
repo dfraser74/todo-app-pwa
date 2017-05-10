@@ -9,6 +9,27 @@ export default {
     display: 'flex',
     flexDirection: 'row',
   },
+  container: {
+    maxWidth: 400,
+    width: '100%',
+    margin: '0 auto'
+  },
+  header: {
+    alignItems: 'center'
+  },
+  headerImage: {
+    position: 'relative'
+  },
+  tab: {
+    width: '100%',
+    margin: '0 auto',
+  },
+  tabItem: {
+    backgroundColor: '#50D2C2'
+  },
+  inkBar: {
+    backgroundColor: '#009688'
+  },
   title: {
     position: 'absolute',
     top: '50%',

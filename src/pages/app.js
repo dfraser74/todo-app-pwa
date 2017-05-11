@@ -8,6 +8,8 @@ import Home from './Home';
 import Login from './Login';
 import Register from './Register';
 import NewTask from './NewTask';
+import Category from './Category';
+import NewCategory from './NewCategory';
 import Settings from './Settings';
 import NotFound from './NotFound';
 import UserService from '../services/user';
@@ -19,6 +21,8 @@ class App extends Component {
     return [
       <Route exact path="/" key="home" component={Home} />,
       <Route path="/new-task" key="new-task" component={NewTask} />,
+      <Route path="/category" key="category" component={Category} />,
+      <Route path="/new-category" key="new-category" component={NewCategory} />,
       <Route path="/settings" key="settings" component={Settings} />,
       <Route path="/404" key="not-found" component={NotFound} />,
     ];

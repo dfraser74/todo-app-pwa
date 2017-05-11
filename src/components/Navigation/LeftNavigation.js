@@ -56,7 +56,7 @@ class LeftNavigation extends React.Component {
           style={styles.listItem}
         >
           {
-            ['Home', 'Settings'].map((key, index) =>
+            ['Home', 'Category', 'Settings'].map((key, index) =>
               <ListItem
                 key={index}
                 primaryText={key}

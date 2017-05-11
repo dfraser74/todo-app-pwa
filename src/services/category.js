@@ -6,7 +6,7 @@ class Cateogry {
 
   constructor() {
     database.ref('categories').on('value', (snapshot) => {
-      this.taskList = snapshot.val() || {};
+      this.categoryList = snapshot.val() || {};
     });
   }
 

@@ -50,7 +50,6 @@ class Navigation extends Component {
     return(
       <AppBar
         {...app}
-        title="Settings"
       />
     );
   }

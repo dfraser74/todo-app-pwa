@@ -24,5 +24,17 @@ export default {
     overflow: 'hidden',
     borderRadius: '100%',
     border: '1px solid rgb(188, 188, 188)',
+  },
+  navigation: {
+    width: '100%',
+    maxWidth: 400,
+    background: '#FFF',
+    margin: '0 auto'
+  },
+  titleNavBar: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#1D1D26'
   }
 };

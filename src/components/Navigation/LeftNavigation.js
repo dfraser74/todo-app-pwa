@@ -10,6 +10,7 @@ import styles from './styles';
 import userImage from '../../assets/images/user.png';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
+import Avatar from 'material-ui/Avatar';
 
 @observer
 class LeftNavigation extends React.Component {
@@ -24,6 +25,7 @@ class LeftNavigation extends React.Component {
   render() {
     const currentUser = UserService.info || {};
     if(!currentUser.uid) return null
+    const { displayName, email } = currentUser || {};
     return (
       <Drawer
         width={300}
@@ -38,8 +40,14 @@ class LeftNavigation extends React.Component {
             style={styles.header}
             subtitleColor="#CFCFCF"
             subtitle={currentUser.email}
-            avatar={currentUser.photoURL || userImage}
-            title={currentUser.displayName || currentUser.email}
+            avatar={
+              <Avatar
+                style={styles.avatar}
+              >
+                <img style={styles.img} src={currentUser.photoURL || userImage} alt={displayName || email}/>
+              </Avatar>
+            }
+            title={displayName || email}
           />
           {!!currentUser.bio && <CardText>{currentUser.bio}</CardText>}
         </Card>

@@ -13,5 +13,16 @@ export default {
   menuItem: {
     paddingLeft: 30,
     color: '#FFFFFF',
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+  },
+  img: {
+    width: 40,
+    height: 40,
+    overflow: 'hidden',
+    borderRadius: '100%',
+    border: '1px solid rgb(188, 188, 188)',
   }
 };

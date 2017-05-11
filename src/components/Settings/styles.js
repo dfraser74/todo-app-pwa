@@ -56,5 +56,29 @@ export default {
     fontSize: 13,
     marginTop: 20,
     color: 'rgba(0, 0, 0, 0.3)',
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    position: 'relative',
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    top: 0,
+    right: 0,
+    padding: 0,
+    color: '#FFFFFF',
+    borderRadius: '100%',
+    position: 'absolute',
+    backgroundColor: '#50D2C2',
+  },
+  img: {
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    borderRadius: '100%',
+    border: '3px solid rgb(188, 188, 188)',
   }
 };

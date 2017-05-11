@@ -22,9 +22,11 @@ function getClientEnvironment(publicUrl) {
       // images into the `src` and `import` them in code to get their paths.
       PUBLIC_URL: publicUrl,
       FIREBASE_PROJECT_ID: 'todo-with-pwa',
+      FIREBASE_STORAGE: 'todo-with-pwa.appspot.com',
       FIREBASE_AUTH_DOMAIN: 'todo-with-pwa.firebaseapp.com',
       FIREBASE_DATABASE_URL: 'https://todo-with-pwa.firebaseio.com',
       FIREBASE_KEY: 'AIzaSyDDo_RzQ9KvJM4rr0oMSrtPnV_ePVediYA',
+
     });
   // Stringify all values so we can feed into Webpack DefinePlugin
   var stringified = {

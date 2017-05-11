@@ -3,6 +3,7 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import Toggle from 'material-ui/Toggle';
+import Avatar from 'material-ui/Avatar';
 import DatePicker from 'material-ui/DatePicker';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import styles from './styles';
@@ -10,6 +11,10 @@ import { observer } from 'mobx-react';
 import { observable, autorun, toJS } from 'mobx';
 import UserService from '../../services/user';
 import moment from 'moment';
+import IconButton from 'material-ui/IconButton';
+import MdPlus from 'react-icons/lib/md/add';
+
+import userImage from '../../assets/images/user.png';
 
 @observer
 class Form extends Component {
@@ -19,13 +24,16 @@ class Form extends Component {
     birthday: "",
     password: "",
     displayName: "",
+    photoURL: "",
     notifications: true,
   };
+  @observable file = null;
 
   constructor(props) {
     super(props);
     this.onSave = this.onSave.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.onOpenUpload = this.onOpenUpload.bind(this);
 
     autorun(() => {
       this.profile = toJS({ ...UserService.info });
@@ -42,16 +50,43 @@ class Form extends Component {
     const profile = {...this.profile};
     delete profile.password;
     delete profile.email;
-    return UserService.onSave(profile)
+    return UserService.onSave(profile, this.file)
+  }
+
+  onOpenUpload() {
+    this.inputFile.click();
+    this.inputFile.onchange = (e) => {
+      const reader = new FileReader();
+      const file = this.inputFile.files[0];
+
+      reader.onloadend = () => {
+        this.imageName = file.name;
+        this.profile.photoURL = reader.result;
+      }
+      this.file = file;
+      reader.readAsDataURL(file);
+    }
   }
 
   render() {
-    const { displayName, email, password, birthday, gender, notifications } = this.profile;
+    const { displayName, email, password, birthday, gender, notifications, photoURL } = this.profile;
     return (
       <Paper
         zDepth={0}
         style={styles.container}
       >
+        <Avatar
+          style={styles.avatar}
+        >
+          <IconButton
+            style={styles.icon}
+            onTouchTap={this.onOpenUpload}
+          >
+            <MdPlus size={20} />
+          </IconButton>
+          <img style={styles.img} src={photoURL || userImage} alt={displayName || email}/>
+        </Avatar>
+
         <TextField
           {...styles.input}
           fullWidth
@@ -126,6 +161,9 @@ class Form extends Component {
           toggled={!!notifications}
           onToggle={(e) => this.onChange(e, !notifications)}
         />
+        <input
+          style={{display: 'none'}}
+          type="file" ref={(ref) => (this.inputFile = ref)} accept="image/*" />
       </Paper>
     )
   }

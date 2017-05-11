@@ -1,4 +1,4 @@
-import { auth, database } from '../db/firebase';
+import { auth, database, storage } from '../db/firebase';
 import { observable } from 'mobx';
 
 const fields = ['uid', 'email', 'photoURL', 'displayName', 'refreshToken', 'emailVerified', 'birthday', 'gender', 'notifications'];
@@ -17,7 +17,23 @@ class User {
     emailVerified: false,
   };
 
-  onSave(profile) {
+  onSave(profile, file) {
+    if (!!file) {
+      return new Promise((resolve, reject) => {
+        storage.ref(`/users/${file.name}`)
+          .put(file)
+          .then(res => {
+            profile.photoURL = res.downloadURL;
+            auth.currentUser
+                .updateProfile(profile)
+                .then(() => {
+                  database.ref(`/users/${this.info.uid}`).update(profile);
+                  resolve(profile);
+                }, reject);
+          });
+      });
+    }
+
     return new Promise((resolve, reject) => {
       auth.currentUser
           .updateProfile(profile)

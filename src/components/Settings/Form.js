@@ -1,82 +1,130 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
-import Subheader from 'material-ui/Subheader';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import Toggle from 'material-ui/Toggle';
 import DatePicker from 'material-ui/DatePicker';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import styles from './styles';
+import { observer } from 'mobx-react';
+import { observable, autorun, toJS } from 'mobx';
+import UserService from '../../services/user';
+import moment from 'moment';
 
-
+@observer
 class Form extends Component {
+  @observable profile = {
+    email: "",
+    gender: "",
+    birthday: "",
+    password: "",
+    displayName: "",
+    notifications: true,
+  };
 
   constructor(props) {
     super(props);
-    this.state = {
-      infomations: {
-        name: "",
-        email: "",
-        password: "",
-        phone: "",
-        address: "",
-        twitter: "",
-        birthday: ""
-      },
-    };
+    this.onSave = this.onSave.bind(this);
+    this.onChange = this.onChange.bind(this);
+
+    autorun(() => {
+      this.profile = toJS({ ...UserService.info });
+    })
+  }
+
+  onChange(e, value) {
+    !!e && e.preventDefault();
+    const name = !!e ? e.target.name : 'birthday';
+    this.profile = {...this.profile, [name]: value};
+  }
+
+  onSave() {
+    const profile = {...this.profile};
+    delete profile.password;
+    delete profile.email;
+    return UserService.onSave(profile)
   }
 
   render() {
-    const { infomations } = this.state;
-
+    const { displayName, email, password, birthday, gender, notifications } = this.profile;
     return (
       <Paper
         zDepth={0}
-        style={{ padding: 40 }}
+        style={styles.container}
       >
-        <Subheader style={{textAlign: 'center'}}> Settings </Subheader>
         <TextField
-          defaultValue={infomations['name'] || "name"}
-          floatingLabelText="NAME"
+          {...styles.input}
+          fullWidth
+          name="displayName"
+          floatingLabelFixed
+          hintText="abc xyz"
+          value={displayName || ''}
+          floatingLabelText="FULL NAME"
+          onChange={this.onChange}
+          ref={ref => (this.displayName = ref)}
         />
         <TextField
-          defaultValue={infomations['email'] || "email@example.com"}
+          {...styles.input}
+          disabled
+          fullWidth
+          name="email"
+          floatingLabelFixed
+          hintText="abc@example.com"
+          value={email || ''}
           floatingLabelText="EMAIL"
+          ref={ref => (this.email = ref)}
+          onChange={this.onChange}
         />
         <TextField
-          defaultValue={infomations['password'] || "**********"}
+          {...styles.input}
+          fullWidth
+          name="password"
+          floatingLabelFixed
+          hintText="********"
+          value={password || ''}
           floatingLabelText="PASSWORD"
+          ref={ref => (this.password = ref)}
+          onChange={this.onChange}
         />
         <DatePicker
           autoOk={true}
+          name="birthday"
+          style={styles.datePicker}
           floatingLabelText="BIRTHDAY"
-          defaultDate={infomations['birthday'] || new Date()}
           disableYearSelection={false}
+          value={new Date(birthday)}
+          textFieldStyle={styles.textFieldStyle}
+          onChange={this.onChange}
+          formatDate={(date) => moment(date).format('MMM DD, YYYY')}
         />
-        <div className="notifications" style={{display: 'inline-block', width: 300}}>
-          <label>GENDER</label>
+        <div style={styles.genderGroup}>
+          <label style={styles.scale}>GENDER</label>
           <RadioButtonGroup
             name="gender"
             labelPosition="right"
-            defaultSelected={infomations['gender'] || 'Female'}
-            style={{display: 'inline-block', width: 200}}
+            style={styles.radioGroup}
+            onChange={this.onChange}
+            valueSelected={gender}
           >
             <RadioButton
-              value="Female"
+              value="female"
               label="Female"
-              style={{display: 'inline-block', maxWidth: 100}}
+              {...styles.radio}
             />
             <RadioButton
-              value="Male"
+              value="male"
               label="Male"
-              style={{display: 'inline-block', maxWidth: 100}}
+              {...styles.radio}
             />
           </RadioButtonGroup>
         </div>
         <Divider />
-        <br />
         <Toggle
+          name="notifications"
           label="NOTIFICATIONS"
-          defaultToggled={infomations['notifications'] || false}
+          style={styles.toggle}
+          toggled={!!notifications}
+          onToggle={(e) => this.onChange(e, !notifications)}
         />
       </Paper>
     )

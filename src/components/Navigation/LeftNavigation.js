@@ -48,12 +48,16 @@ class LeftNavigation extends React.Component {
           style={styles.listItem}
         >
           {
-            ['Home', 'Calendar', 'Overview', 'Groups', 'Groups', 'Lists', 'Profile', 'Timeline', 'Settings'].map((key, index) =>
+            ['Home', 'Settings'].map((key, index) =>
               <ListItem
                 key={index}
                 primaryText={key}
                 style={styles.menuItem}
-                onTouchTap={() => this.props.history.push(key.toLocaleLowerCase())}
+                onTouchTap={() => {
+                  DrawerService.onClose();
+                  if (key === 'Home') return this.props.history.replace('/');
+                  this.props.history.push(key.toLocaleLowerCase());
+                }}
               />
             )
           }

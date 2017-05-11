@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Categories from '../../components/Category/List';
-import CategoryService from '../../services/category';
 import { observer } from 'mobx-react';
 import Navigation from '../../components/Navigation';
 import MdAdd from 'react-icons/lib/md/add';

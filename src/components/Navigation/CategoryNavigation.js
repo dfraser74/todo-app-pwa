@@ -5,9 +5,7 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import MdCheck from 'react-icons/lib/md/check';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import TaskService from '../../services/task';
 import { observer } from 'mobx-react';
-import DrawerService from '../../services/drawer';
 import styles from './styles';
 
 @observer

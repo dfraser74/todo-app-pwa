@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import { observer } from 'mobx-react';
-import Avatar from 'material-ui/Avatar';
 import FaIconClock from 'react-icons/lib/fa/clock-o';
 import MdLocationOn from 'react-icons/lib/md/location-on';
 import PropTypes from 'prop-types';

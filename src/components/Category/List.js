@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {List, ListItem} from 'material-ui/List';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router';
 import {GridList, GridTile} from 'material-ui/GridList';

@@ -50,7 +50,7 @@ class Form extends Component {
   }
 
   render() {
-    const { title, description, photoURL } = this.category
+    const { title, photoURL } = this.category
     return (
       <Paper
         zDepth={0}

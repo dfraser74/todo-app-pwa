@@ -8,7 +8,7 @@ class Drawer {
   }
 
   onClose() {
-    this.open = true;
+    this.open = false;
   }
 
   onToggle() {

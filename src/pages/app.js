@@ -8,6 +8,7 @@ import Home from './Home';
 import Login from './Login';
 import Register from './Register';
 import NewTask from './NewTask';
+import Settings from './Settings';
 import NotFound from './NotFound';
 import UserService from '../services/user';
 import LeftNavigation from '../components/Navigation/LeftNavigation';
@@ -18,6 +19,7 @@ class App extends Component {
     return [
       <Route exact path="/" key="home" component={Home} />,
       <Route path="/new-task" key="new-task" component={NewTask} />,
+      <Route path="/settings" key="settings" component={Settings} />,
       <Route path="/404" key="not-found" component={NotFound} />,
     ];
   }

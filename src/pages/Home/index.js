@@ -29,7 +29,7 @@ class Home extends Component {
     return (
       <Paper
         zDepth={0}
-        style={styles.flexColumn, styles.container}
+        style={{...styles.flexColumn, ...styles.container}}
       >
         <div>
           <HomeNavigation style={styles.header}/>

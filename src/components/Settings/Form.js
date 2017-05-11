@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
-import Divider from 'material-ui/Divider';
-import Toggle from 'material-ui/Toggle';
 import Avatar from 'material-ui/Avatar';
 import DatePicker from 'material-ui/DatePicker';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
@@ -69,7 +67,7 @@ class Form extends Component {
   }
 
   render() {
-    const { displayName, email, password, birthday, gender, notifications, photoURL } = this.profile;
+    const { displayName, email, birthday, gender, photoURL } = this.profile;
     return (
       <Paper
         zDepth={0}
@@ -110,17 +108,6 @@ class Form extends Component {
           ref={ref => (this.email = ref)}
           onChange={this.onChange}
         />
-        <TextField
-          {...styles.input}
-          fullWidth
-          name="password"
-          floatingLabelFixed
-          hintText="********"
-          value={password || ''}
-          floatingLabelText="PASSWORD"
-          ref={ref => (this.password = ref)}
-          onChange={this.onChange}
-        />
         <DatePicker
           autoOk={true}
           name="birthday"
@@ -153,14 +140,6 @@ class Form extends Component {
             />
           </RadioButtonGroup>
         </div>
-        <Divider />
-        <Toggle
-          name="notifications"
-          label="NOTIFICATIONS"
-          style={styles.toggle}
-          toggled={!!notifications}
-          onToggle={(e) => this.onChange(e, !notifications)}
-        />
         <input
           style={{display: 'none'}}
           type="file" ref={(ref) => (this.inputFile = ref)} accept="image/*" />

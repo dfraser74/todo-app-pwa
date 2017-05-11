@@ -1,12 +1,29 @@
-import { observable, computed } from 'mobx';
+import { observable, computed, autorun } from 'mobx';
 import { database } from '../db/firebase';
 import moment from 'moment';
+import UserService from './user';
 
 class Task {
   @observable taskList = {};
+  @observable current = moment().format('MMMM DD, YYYY');
 
   constructor() {
-    this.findByDate()
+    autorun(() => {
+      const createdBy = UserService.info.uid;
+      if (!createdBy) this.taskList = {};
+
+      database.ref('/tasks')
+        .orderByChild('date')
+        .equalTo(this.current)
+        .on('value', (snapshot) => {
+          const taskList = snapshot.val() || {};
+          this.taskList = Object.keys(taskList).reduce((obj, key) => {
+            const task = taskList[key]
+            if (!!createdBy && task.createdBy === createdBy) obj[key] = task;
+            return obj;
+          }, {})
+        });
+      });
   }
 
   @computed get Completed() {
@@ -44,24 +61,21 @@ class Task {
   }
 
   findByDate(date) {
-    const current = moment(date).format('MMMM DD, YYYY')
-    return new Promise((resolve, reject) => {
-      database.ref('/tasks').orderByChild('date').equalTo(current).on('value', (snapshot) => {
-        this.taskList = snapshot.val() || {};
-        resolve(this.taskList);
-      });
-    })
+    this.current = moment(date).format('MMMM DD, YYYY')
   }
 
   onToggle(key, value) {
     const updatedAt = Date.now();
-    return database.ref(`tasks/${key}`).update({ completed: value, updatedAt})
+    const updatedBy = UserService.info.uid;
+    return database.ref(`tasks/${key}`).update({ completed: value, updatedAt, updatedBy})
   }
 
   onAdd(task) {
     const createdAt = Date.now();
     const updatedAt = Date.now();
-    return database.ref('/tasks').push({ ...task, createdAt, updatedAt });
+    const createdBy = UserService.info.uid;
+    const updatedBy = UserService.info.uid;
+    return database.ref('/tasks').push({ ...task, createdAt, updatedAt, createdBy, updatedBy });
   }
 
   onDelete(key) {

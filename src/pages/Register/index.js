@@ -52,7 +52,7 @@ class Register extends Component {
       return false;
     }
 
-    UserService.onRegister({ email, password }, (error, errors) => {
+    UserService.onRegister({ email, password, displayName }, (error, errors) => {
       this.isSubmit = false;
       if (!error) {
         return this.props.history.replace('/');

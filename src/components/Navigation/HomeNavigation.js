@@ -8,6 +8,7 @@ import { withRouter } from 'react-router';
 import TaskService from '../../services/task';
 import { observer } from 'mobx-react';
 import DatePicker from 'material-ui/DatePicker';
+import Moment from 'moment';
 
 let DateTimeFormat;
 
@@ -20,15 +21,15 @@ import DrawerService from '../../services/drawer';
 const styles = {
   navigation: {
     width: '100%',
-    maxWidth: 400,
     background: '#FFF',
     margin: '0 auto'
   },
   titleNavBar: {
+    fontSize: 16,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#1D1D26'
+    color: '#1D1D26',
   }
 }
 
@@ -40,39 +41,45 @@ class HomeNavigation extends Component {
     history: PropTypes.object.isRequired
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      date: new Date(),
+    }
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(e, date) {
+    this.setState({date});
+    TaskService.findByDate(date)
+  }
+
   render() {
     return(
-      <AppBar
-        style={styles.navigation}
-        title={
-          <DatePicker
-            fullWidth
-            hintText="Date"
-            style={{
-              // maxWidth: '100%'
-              width: 'auto'
-            }}
-            textFieldStyle={{
-              fontSize: 23,
-              width: 'auto',
-              // margin: '0 25%'
-            }}
-            formatDate={new DateTimeFormat('en-US', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            }).format}
-            onChange={(e, date) => {
-              TaskService.findByDate(date)
-            }}
-            defaultDate={new Date()}
-          />
-        }
-        iconElementLeft={<IconButton><MdMenu size={24} color={'#D8D8D8'} /></IconButton>}
-        iconElementRight={<IconButton><ContentAdd color={'#D8D8D8'} /></IconButton>}
-        onRightIconButtonTouchTap={() => (this.props.history.push('/new-task'))}
-        onLeftIconButtonTouchTap={() => DrawerService.onOpen()}
-      />
+      <div>
+        <AppBar
+          style={styles.navigation}
+          title={Moment(this.state.date).format('MMM DD, YYYY')}
+          onTitleTouchTap={() => !!this.datePicker && this.datePicker.openDialog()}
+          titleStyle={styles.titleNavBar}
+          iconElementLeft={<IconButton><MdMenu size={24} color={'#D8D8D8'} /></IconButton>}
+          iconElementRight={<IconButton><ContentAdd color={'#D8D8D8'} /></IconButton>}
+          onRightIconButtonTouchTap={() => (this.props.history.push('/new-task'))}
+          onLeftIconButtonTouchTap={() => DrawerService.onOpen()}
+        />
+        <DatePicker
+          hintText="Date"
+          ref={ref => this.datePicker = ref}
+          formatDate={new DateTimeFormat('en-US', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          }).format}
+          style={{display: 'none'}}
+          onChange={this.onChange}
+          defaultDate={this.state.date}
+        />
+      </div>
     );
   }
 }

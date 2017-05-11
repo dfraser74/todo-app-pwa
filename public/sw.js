@@ -2,16 +2,25 @@ const CACHE_NAME = 'todo-app';
 const CACHE_URLS = [
   '/',
   '/sw.js',
-  '/index.html',
   '/favicon.ico',
   '/browserconfig.xml',
   '/manifest.json',
   '/static/js/main.js',
   '/static/media/marked.png',
+  '/icons/favicon-16x16.png',
   '/icons/favicon-32x32.png',
+  '/icons/mstile-144x144.png',
+  '/static/media/header_bg.png',
+  '/icons/android-chrome-192x192.png',
+  '/sockjs-node/info?t=1494484164820',
   '/icons/android-chrome-144x144.png',
   'https://todo-with-pwa.firebaseio.com',
+  'wss://s-usc1c-nss-124.firebaseio.com/.ws',
+  'https://apis.google.com/js/api.js?onload=__iframefcb646503',
   'https://console.firebase.google.com/project/todo-with-pwa/database/data/',
+  'https://www.googleapis.com/identitytoolkit/v3/relyingparty/getProjectConfig?key=AIzaSyDDo_RzQ9KvJM4rr0oMSrtPnV_ePVediYA&cb=1494484166859',
+  'https://todo-app-pwa.herokuapp.com/icons/favicon-32x32.png',
+  'https://todo-app-pwa.herokuapp.com/icons/android-chrome-144x144.png'
 ];
 
 const getEndpoint = () => {

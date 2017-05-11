@@ -15,7 +15,8 @@ class Settings extends Component {
   onSave() {
     this.form
     .onSave()
-    .then(() => this.props.history.goBack());
+    .then(() => this.props.history.goBack())
+    .catch(() => this.props.history.goBack());
   }
 
   render() {

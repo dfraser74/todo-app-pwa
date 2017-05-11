@@ -67,6 +67,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "predeploy": "npm run build",
+    "deploy": "firebase deploy",
     "test": "node scripts/test.js --env=jsdom"
   },
   "proxy": "http://localhost:3001",

@@ -106,7 +106,22 @@ class Task {
   onToggle(key, value) {
     const updatedAt = Date.now();
     const updatedBy = UserService.info.uid;
-    return database.ref(`tasks/${key}`).update({ completed: value, updatedAt, updatedBy})
+    const task = { completed: value, updatedAt, updatedBy };
+    return new Promise((resolve, reject) => {
+      if (!Network.check) {
+        IndexDb.addTask(task, key)
+              .then((res, ...args) => {
+                const taskList = {...this.taskList};
+                taskList[key] = {...taskList[key], ...task};
+                this.taskList = taskList;
+                resolve(res, ...args);
+              }).catch(reject);
+      } else {
+        return database.ref(`tasks/${key}`)
+              .update(task)
+              .then(resolve).catch(reject);
+      }
+    })
   }
 
   onAdd(task) {
@@ -127,21 +142,36 @@ class Task {
   getTaskByCategory(categoryId) {
     const createdBy = UserService.info.uid;
     return new Promise((resolve, reject) => {
-      database.ref('/tasks')
-        .orderByChild('categoryId')
-        .equalTo(categoryId)
-        .on('value', snapshot => {
-          const taskList = snapshot.val() || {};
+      if (!Network.check) {
+        IndexDb.fetchAllTask(this.createdBy).then(taskList => {
+          if (!Network.check) {
+            resolve(Object.keys(taskList).reduce((obj, key) => {
+              const task = taskList[key];
+              if (!!createdBy && task.createdBy !== createdBy && categoryId === task.categoryId) return obj;
 
-          resolve(Object.keys(taskList).reduce((obj, key) => {
-            const task = taskList[key];
-            if (!!createdBy && task.createdBy !== createdBy) return obj;
+              const type = task.completed ? 'Completed' : 'UnCompleted';
+              obj[type][key] = task;
+              return obj;
+            }, { Completed: {}, UnCompleted: {} }));
+          }
+        })
+      } else {
+        database.ref('/tasks')
+          .orderByChild('categoryId')
+          .equalTo(categoryId)
+          .on('value', snapshot => {
+            const taskList = snapshot.val() || {};
 
-            const type = task.completed ? 'Completed' : 'UnCompleted';
-            obj[type][key] = task;
-            return obj;
-          }, { Completed: {}, UnCompleted: {} }));
-        });
+            resolve(Object.keys(taskList).reduce((obj, key) => {
+              const task = taskList[key];
+              if (!!createdBy && task.createdBy !== createdBy) return obj;
+
+              const type = task.completed ? 'Completed' : 'UnCompleted';
+              obj[type][key] = task;
+              return obj;
+            }, { Completed: {}, UnCompleted: {} }));
+          });
+      }
     });
   }
 }

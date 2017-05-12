@@ -7,6 +7,7 @@ import MdArrowBack from 'react-icons/lib/md/arrow-back';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import TaskService from '../../services/task';
+import CategoryService from '../../services/category';
 import Tasks from '../../components/Task/List';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import styles from './styles.js';
@@ -47,6 +48,7 @@ class ShowCategory extends Component {
 
   render() {
     const categoryId = this.props.match.params.categoryId;
+    const category = CategoryService.categoryList[categoryId] || {};
     return (
        <Paper
         zDepth={0}
@@ -54,7 +56,7 @@ class ShowCategory extends Component {
       >
         <div>
           <Navigation
-            title="Category"
+            title={category.title}
             onRight={() => (this.props.history.push(`/category/${categoryId}/edit`))}
             onLeft={() => (this.props.history.goBack())}
             leftIcon={<MdArrowBack size={24} color={'#D8D8D8'} />}

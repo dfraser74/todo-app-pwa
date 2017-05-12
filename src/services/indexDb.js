@@ -112,7 +112,7 @@ class IndexedDB {
     })
   }
 
-  fetchAllCategories() {
+  fetchAllCategories(createdBy) {
     return new Promise((resolve, reject) => {
       if (!!!this.connection) return reject("Can't connection indexedDB");
       const request = this.connection.transaction(["categories"], "readonly");
@@ -121,7 +121,7 @@ class IndexedDB {
       cursorRequest.onsuccess = (event) => {
         const result = event.target.result;
         if (!result) return;
-        tasks[result.key] = result.value;
+        if (createdBy === result.value.createdBy) tasks[result.key] = result.value;
         result.continue();
       }
 

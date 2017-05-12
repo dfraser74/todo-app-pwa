@@ -11,8 +11,8 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {red500} from 'material-ui/styles/colors';
-import MdDelete  from 'react-icons/lib/md/delete';
-import MdClose from 'react-icons/lib/md/close';
+import MdUnCheck  from 'react-icons/lib/md/check-box-outline-blank';
+import MdClose from 'react-icons/lib/md/replay';
 import MdCheck from 'react-icons/lib/md/check';
 
 import TaskService from '../../services/task';
@@ -37,8 +37,6 @@ class Lists extends Component {
   }
 
   onToggle(key, value) {
-    console.log(key);
-    console.log(value);
     TaskService.onToggle(key, value);
   }
 
@@ -62,36 +60,46 @@ class Lists extends Component {
   }
 
   renderItemRight(key, task) {
-    const iconButtonElement = (
-      <IconButton
-        touch={true}
-        tooltip="Action"
-        tooltipPosition="bottom-left"
-      >
-        <MoreVertIcon color={red500} />
-      </IconButton>
-    );
     const { completed } = this.props;
-    const title = !!completed ? 'Uncomplete' : 'Completed';
-    const icon = !!completed ? <MdClose /> : <MdCheck />;
+    const icon = !!completed ? <MdClose size={30} color={red500} /> : <MdUnCheck size={30} color={red500}/>;
 
     return (
-      <IconMenu
-        iconButtonElement={iconButtonElement}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+      <IconButton
+        onTouchTap={() => (this.onToggle(key, !completed))}
       >
-        <MenuItem
-          leftIcon={icon}
-          onTouchTap={() => (this.onToggle(key, !completed))}
-        >{title}</MenuItem>
-        <MenuItem
-          primaryText="Remove"
-          leftIcon={<MdDelete />}
-          onTouchTap={() => (this.onDelete(key))}
-        />
-      </IconMenu>
+        {icon}
+      </IconButton>
     );
+
+    // const iconButtonElement = (
+    //   <IconButton
+    //     touch={true}
+    //     onTouchTap={() => (this.onToggle(key, !completed))}
+    //   >
+    //     <MoreVertIcon />
+    //   </IconButton>
+    // );
+    // const { completed } = this.props;
+    // const title = !!completed ? 'Uncomplete' : 'Completed';
+    // const icon = !!completed ? <MdClose /> : <MdCheck />;
+
+    // return (
+    //   <IconMenu
+    //     iconButtonElement={iconButtonElement}
+    //     anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+    //     targetOrigin={{horizontal: 'right', vertical: 'top'}}
+    //   >
+    //     <MenuItem
+    //       leftIcon={icon}
+    //       onTouchTap={() => (this.onToggle(key, !completed))}
+    //     >{title}</MenuItem>
+    //     <MenuItem
+    //       primaryText="Remove"
+    //       leftIcon={<MdDelete />}
+    //       onTouchTap={() => (this.onDelete(key))}
+    //     />
+    //   </IconMenu>
+    // );
   }
 
   renderTask(task, key) {

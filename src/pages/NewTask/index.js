@@ -21,7 +21,7 @@ class NewTask extends Component {
   onSubmit() {
     this.form.add().then(res => {
       this.props.history.replace('/');
-    })
+    }).catch(e => {});
   }
 
   render() {

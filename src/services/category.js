@@ -27,6 +27,10 @@ class Cateogry {
     this.categoryList = { ...categoryList };
     return database.ref(`categories/${key}`).remove()
   }
+
+  onFilter(text) {
+    if (!!!text) return this.categoryList;
+  }
 }
 
 export default new Cateogry()

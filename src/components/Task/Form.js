@@ -3,8 +3,10 @@ import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { observable, computed, toJS } from 'mobx';
+import AutoComplete from 'material-ui/AutoComplete';
 import TaskService from '../../services/task';
+import CategoryService from '../../services/category';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import moment from 'moment';
@@ -41,16 +43,25 @@ class Form extends Component {
   }
 
   add() {
-    this.isSubmiting = true
+    const errors = {};
+    this.isSubmiting = true;
+    const task = {...this.task};
+    !!!task.title && (errors.title = 'Title can\' be blank');
+    !!!task.categoryId && (errors.category = 'Category can\' be blank');
+    if (Object.keys(errors).length > 0) {
+      this.error = {...errors};
+      this.isSubmiting = false;
+      return Promise.reject(errors);
+    }
 
-    const task = {
-      ...this.task,
+    const newTask = {
+      ...task,
       date: moment(this.task.date).format('MMMM DD, YYYY'),
       starttime: moment(this.task.starttime).format("hh:mm a"),
       endtime: moment(this.task.endtime).format("hh:mm a")
     }
     this.isSubmiting = false;
-    return TaskService.onAdd(task);
+    return TaskService.onAdd(newTask);
   }
 
   reset() {
@@ -77,8 +88,13 @@ class Form extends Component {
     };
   }
 
+  @computed get dataSource() {
+    const categoryList = toJS(CategoryService.categoryList);
+    return Object.keys(categoryList).map((key) => ({ ...categoryList[key], categoryId: key }));
+  }
+
   render() {
-    const { name, completed, description, date, starttime, endtime, location } = this.task;
+    const { name, completed, description, date, starttime, endtime } = this.task;
 
     return (
       <Paper
@@ -98,7 +114,7 @@ class Form extends Component {
           multiLine={true}
           value={description}
           hintText="Todo description"
-          errorText={this.error.title}
+          errorText={this.error.description}
           underlineFocusStyle={styles.underlineFocusStyle}
           onChange={e => (this.task = { ...this.task, description: e.target.value })}
         /><br />
@@ -132,13 +148,16 @@ class Form extends Component {
             onChange={(e, date) => (this.task = { ...this.task, endtime: date })}
           />
         </div><br />
-        <TextField
-          hintText="Location"
+        <AutoComplete
+          hintText="Category"
           fullWidth
-          value={location}
-          errorText={this.error.title}
+          open={true}
+          errorText={this.error.category}
+          dataSource={this.dataSource}
+          dataSourceConfig={{ text: 'title', value: 'categoryId'}}
           underlineFocusStyle={styles.underlineFocusStyle}
-          onChange={e => (this.task = { ...this.task, location: e.target.value })}
+          onNewRequest={(res) => (this.task = { ...this.task, categoryId: res.categoryId})}
+          filter={(searchText, key) => searchText !== '' && key.toLocaleLowerCase().indexOf(searchText.toLocaleLowerCase()) !== -1}
         /><br />
         <div style={{display: 'flex'}}>
           <Checkbox
@@ -152,4 +171,4 @@ class Form extends Component {
   }
 }
 
-export default Form
+export default Form;

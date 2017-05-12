@@ -2,36 +2,68 @@ import { observable, computed, autorun, toJS } from 'mobx';
 import { database } from '../db/firebase';
 import moment from 'moment';
 import UserService from './user';
+import IndexDb from './indexDb';
+import Network from './network';
 
 class Task {
+  database;
+  isLoaded;
+  oldCurrent = null;
   @observable taskList = {};
   createdBy = UserService.info.uid;
-  oldCurrent = null;
   @observable current = moment().format('MMMM DD, YYYY');
 
   constructor() {
     autorun(() => {
       if((this.createdBy === UserService.info.uid && !!this.createdBy)
           && this.oldCurrent === this.current) return;
-
       this.createdBy = UserService.info.uid;
       this.oldCurrent = toJS(this.current);
       const createdBy = this.createdBy;
 
+      if (!Network.check) {
+        this.dataOffline(UserService.info.uid);
+        !!this.database && typeof this.database.off === 'function' && this.database.off();
+        return;
+      } else {
+        this.database = null;
+      }
+
       if (!this.createdBy) this.taskList = {};
 
-      database.ref('/tasks')
+      this.database = database.ref('/tasks')
         .orderByChild('date')
         .equalTo(this.current)
         .on('value', (snapshot) => {
           const taskList = snapshot.val() || {};
+          this.isLoaded = true;
           this.taskList = Object.keys(taskList).reduce((obj, key) => {
             const task = taskList[key]
-            if (!!createdBy && task.createdBy === createdBy) obj[key] = task;
+            if (!!createdBy && task.createdBy === createdBy) {
+              obj[key] = task;
+              IndexDb.addTask(task, key);
+            };
             return obj;
           }, {})
         });
       });
+  }
+
+  dataOffline(uid) {
+    this.taskList = {};
+    setTimeout(() => {
+      IndexDb.fetchAllTask(uid || this.createdBy).then(taskList => {
+        if (!this.isLoaded || !Network.check) {
+          this.taskList = Object.keys(taskList).reduce((obj, key) => {
+            const task = taskList[key];
+            if (!!this.current && task.date === this.current) {
+              obj[key] = task;
+            };
+            return obj;
+          }, {})
+        }
+      })
+    }, 2000);
   }
 
   @computed get Completed() {
@@ -49,7 +81,6 @@ class Task {
 
   @computed get UnCompleted() {
     const taskList = { ...this.taskList };
-
     if (Object.keys(taskList).length < 1) return {};
 
     return (

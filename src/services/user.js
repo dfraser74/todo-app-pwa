@@ -1,5 +1,7 @@
 import { auth, database, storage } from '../db/firebase';
-import { observable } from 'mobx';
+import { observable, autorun } from 'mobx';
+import IndexDb from './indexDb';
+import Network from './network';
 
 const fields = ['uid', 'email', 'photoURL', 'displayName', 'refreshToken', 'emailVerified', 'birthday', 'gender', 'notifications'];
 
@@ -52,6 +54,7 @@ class User {
   }
 
   onLogout() {
+    localStorage.removeItem("todo-app-data-offline-uid");
     return auth.signOut();
   }
 
@@ -84,25 +87,39 @@ class User {
 
 const currentUser = new User();
 
-auth.onAuthStateChanged((user) => {
-  if (user !== null && !user.isAnonymous) {
-    const info = fields.reduce((obj, item) => ({ ...obj, [item]: user[item] }), {});
-    currentUser.info = {...info};
-    database.ref('/users').child(user.uid).on('value', snapshot => {
-      if (!snapshot.val()) return;
-      const newUser = snapshot.val();
-      const newInfo = fields.reduce((obj, item) => {
-        !!newUser[item] && (obj[item] = newUser[item]);
-        return obj;
-      }, {});
-      currentUser.info = {...currentUser.info, ...newInfo};
-    })
-
+autorun(() => {
+  if (!Network.check) {
+    const uid = localStorage.getItem("todo-app-data-offline-uid");
+    if (!!uid) {
+      setTimeout(() => {
+        IndexDb.fetch('users', uid).then(user => {
+          currentUser.info = {...user};
+          currentUser.isLoaded = true;
+        }).catch(() => currentUser.isLoaded = true);
+      }, 2000);
+    }
   } else {
-    currentUser.info = {};
+    auth.onAuthStateChanged((user) => {
+      if (user !== null && !user.isAnonymous) {
+        const info = fields.reduce((obj, item) => ({ ...obj, [item]: user[item] }), {});
+        currentUser.info = {...info};
+        database.ref('/users').child(user.uid).on('value', snapshot => {
+          if (!snapshot.val()) return;
+          const newUser = snapshot.val();
+          const newInfo = fields.reduce((obj, item) => {
+            !!newUser[item] && (obj[item] = newUser[item]);
+            return obj;
+          }, {});
+          currentUser.info = {...currentUser.info, ...newInfo};
+          localStorage.setItem("todo-app-data-offline-uid", user.uid);
+          IndexDb.addUser(currentUser.info, user.uid);
+        })
+      } else {
+        currentUser.info = {};
+      }
+      currentUser.isLoaded = true;
+    })
   }
-
-  currentUser.isLoaded = true;
-})
+});
 
 export default currentUser;

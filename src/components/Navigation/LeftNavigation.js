@@ -56,10 +56,10 @@ class LeftNavigation extends React.Component {
           style={styles.listItem}
         >
           {
-            ['Home', 'Category', 'Settings'].map((key, index) =>
+            ['Home', 'New-task', 'Category', 'Settings'].map((key, index) =>
               <ListItem
                 key={index}
-                primaryText={key}
+                primaryText={key.replace(/-/g,' ')}
                 style={styles.menuItem}
                 onTouchTap={() => {
                   DrawerService.onClose();

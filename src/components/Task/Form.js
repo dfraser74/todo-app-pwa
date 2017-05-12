@@ -46,7 +46,7 @@ class Form extends Component {
     const errors = {};
     this.isSubmiting = true;
     const task = {...this.task};
-    !!!task.title && (errors.title = 'Title can\' be blank');
+    !!!task.name && (errors.name = 'Name can\' be blank');
     !!!task.categoryId && (errors.category = 'Category can\' be blank');
     if (Object.keys(errors).length > 0) {
       this.error = {...errors};
@@ -105,7 +105,7 @@ class Form extends Component {
           value={name}
           fullWidth
           hintText="Task name *"
-          errorText={this.error.title}
+          errorText={this.error.name}
           underlineFocusStyle={styles.underlineFocusStyle}
           onChange={e => (this.task = { ...this.task, name: e.target.value })}
         /><br />

@@ -1,16 +1,24 @@
-import { observable, computed, autorun } from 'mobx';
+import { observable, computed, autorun, toJS } from 'mobx';
 import { database } from '../db/firebase';
 import moment from 'moment';
 import UserService from './user';
 
 class Task {
   @observable taskList = {};
+  createdBy = UserService.info.uid;
+  oldCurrent = null;
   @observable current = moment().format('MMMM DD, YYYY');
 
   constructor() {
     autorun(() => {
-      const createdBy = UserService.info.uid;
-      if (!createdBy) this.taskList = {};
+      if((this.createdBy === UserService.info.uid && !!this.createdBy)
+          && this.oldCurrent === this.current) return;
+
+      this.createdBy = UserService.info.uid;
+      this.oldCurrent = toJS(this.current);
+      const createdBy = this.createdBy;
+
+      if (!this.createdBy) this.taskList = {};
 
       database.ref('/tasks')
         .orderByChild('date')

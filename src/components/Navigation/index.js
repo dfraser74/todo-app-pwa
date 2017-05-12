@@ -25,16 +25,20 @@ class Navigation extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     onRight: PropTypes.func,
+    onLeft: PropTypes.func,
+    leftIcon: PropTypes.node,
     rightIcon: PropTypes.node,
   }
 
   static defaultProps = {
     title: '',
     onRight: () => {},
+    onLeft: () => DrawerService.onOpen(),
+    leftIcon: <MdMenu size={24} color={'#D8D8D8'} />
   }
 
   render() {
-    const { title, onRight, rightIcon, ...args } = this.props;
+    const { title, onRight, onLeft, rightIcon, leftIcon, ...args } = this.props;
 
     const app = {
       title,
@@ -42,9 +46,9 @@ class Navigation extends Component {
       style: styles.navigation,
       titleStyle: styles.titleStyle,
       onRightIconButtonTouchTap: onRight,
-      onLeftIconButtonTouchTap: () => DrawerService.onOpen(),
+      onLeftIconButtonTouchTap: onLeft,
       iconElementRight: <IconButton>{rightIcon}</IconButton>,
-      iconElementLeft: <IconButton><MdMenu size={24} color={'#D8D8D8'} /></IconButton>,
+      iconElementLeft: <IconButton>{leftIcon}</IconButton>,
     }
 
     return(

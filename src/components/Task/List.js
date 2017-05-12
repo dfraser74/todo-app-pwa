@@ -37,6 +37,8 @@ class Lists extends Component {
   }
 
   onToggle(key, value) {
+    console.log(key);
+    console.log(value);
     TaskService.onToggle(key, value);
   }
 
@@ -114,9 +116,9 @@ class Lists extends Component {
   }
 
   render() {
-    const { completed } = this.props
+    const { completed, data } = this.props
     const subTitle = !!completed ? 'Completed' : 'UnCompleted';
-    const tasks = TaskService[subTitle] || {};
+    const tasks = (data || TaskService)[subTitle];
 
     return (
       <List style={styles.containerList}>

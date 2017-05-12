@@ -2,9 +2,11 @@ import { observable, autorun } from 'mobx';
 import { database } from '../db/firebase';
 import IndexDb from './indexDb';
 import Network from './network';
+import UserService from './user';
 
-class Cateogry {
+class Category {
   @observable categoryList = {};
+  createdBy = UserService.info.uid;
   database;
   isLoaded;
 
@@ -28,6 +30,14 @@ class Cateogry {
     });
   }
 
+  onFetch(key) {
+    return new Promise((resolve, reject) => {
+      database.ref('categories').child(key).once('value').then( snapshot => {
+        resolve(snapshot.val());
+      });
+    });
+  }
+
   dataOffline() {
     IndexDb.onsuccess = (e) => {
       IndexDb.fetchAllCategories().then(categories => {
@@ -41,12 +51,14 @@ class Cateogry {
   onAdd(category) {
     const createdAt = Date.now();
     const updatedAt = Date.now();
-    return database.ref('categories').push({ ...category, createdAt, updatedAt });
+    const createdBy = UserService.info.uid;
+    return database.ref('categories').push({ ...category, createdAt, updatedAt, createdBy, updatedBy: createdBy });
   }
 
   onEdit(category, key) {
     const updatedAt = Date.now();
-    return database.ref(`categories/${key}`).update({ ...category, updatedAt });
+    const updatedBy = UserService.info.uid;
+    return database.ref(`categories/${key}`).update({ ...category, updatedAt, updatedBy });
   }
 
   onDelete(key) {
@@ -61,4 +73,4 @@ class Cateogry {
   }
 }
 
-export default new Cateogry();
+export default new Category();

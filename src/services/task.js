@@ -123,6 +123,27 @@ class Task {
     this.taskList = { ...taskList };
     return database.ref(`/tasks/${key}`).remove()
   }
+
+  getTaskByCategory(categoryId) {
+    const createdBy = UserService.info.uid;
+    return new Promise((resolve, reject) => {
+      database.ref('/tasks')
+        .orderByChild('categoryId')
+        .equalTo(categoryId)
+        .on('value', snapshot => {
+          const taskList = snapshot.val() || {};
+
+          resolve(Object.keys(taskList).reduce((obj, key) => {
+            const task = taskList[key];
+            if (!!createdBy && task.createdBy !== createdBy) return obj;
+
+            const type = task.completed ? 'Completed' : 'UnCompleted';
+            obj[type][key] = task;
+            return obj;
+          }, { Completed: {}, UnCompleted: {} }));
+        });
+    });
+  }
 }
 
 export default new Task()

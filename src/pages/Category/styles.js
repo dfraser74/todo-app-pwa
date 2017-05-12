@@ -24,4 +24,14 @@ export default {
   gridList: {
     width: '100%',
   },
+  tab: {
+    width: '100%',
+    margin: '0 auto',
+  },
+  tabItem: {
+    backgroundColor: '#50D2C2'
+  },
+  inkBar: {
+    backgroundColor: '#009688'
+  },
 };

@@ -34,6 +34,16 @@ class Form extends Component {
     return CategoryService.onAdd(category);
   }
 
+  edit(key) {
+    const category = {
+      ...this.category,
+      title: this.category.title,
+      description: this.category.description
+    }
+
+    return CategoryService.onEdit(category, key);
+  }
+
   onOpenUpload() {
     this.inputFile.click();
     this.inputFile.onchange = (e) => {
@@ -50,7 +60,7 @@ class Form extends Component {
   }
 
   render() {
-    const { title, photoURL } = this.category
+    const { title, photoURL, description } = this.category
     return (
       <Paper
         zDepth={0}
@@ -69,6 +79,7 @@ class Form extends Component {
         </CategoryImage>
         <TextField
           fullWidth
+          value={title}
           name="title"
           floatingLabelFixed
           hintText="Category name"
@@ -79,6 +90,7 @@ class Form extends Component {
         />
         <TextField
           fullWidth
+          value={description}
           name="description"
           floatingLabelFixed
           hintText="Description"

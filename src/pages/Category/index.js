@@ -22,12 +22,12 @@ class Category extends Component {
       >
         <div>
           <Navigation
-            title="Category"
+            title="Categories"
             onRight={() => (this.props.history.push('/new-category'))}
             rightIcon={<MdAdd size={24} color={'#D8D8D8'} />}
           />
         </div>
-        <Categories />
+        <Categories router={this.props.history} />
       </Paper>
     );
   }

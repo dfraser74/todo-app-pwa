@@ -28,7 +28,7 @@ class CategoryNavigation extends Component {
         iconElementLeft={<IconButton><NavigationClose size={24} color={'#D8D8D8'} /></IconButton>}
         iconElementRight={<IconButton><MdCheck size={24} color={'#D8D8D8'} /></IconButton>}
         onRightIconButtonTouchTap={(e) => (this.props.onSubmit())}
-        onLeftIconButtonTouchTap={(e) => (this.props.history.push('/category'))}
+        onLeftIconButtonTouchTap={(e) => (this.props.history.push('/categories'))}
       />
     );
   }

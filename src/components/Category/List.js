@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import { withRouter } from 'react-router';
 import {GridList, GridTile} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import CategoryService from '../../services/category';
 
@@ -11,6 +10,25 @@ import styles from './styles.js';
 
 @observer
 class Lists extends Component {
+
+  constructor(props) {
+    super(props);
+    this.renderItemContent = this.renderItemContent.bind(this);
+  }
+
+  renderItemContent(key, category) {
+    return (
+      <GridTile
+        key={key}
+        title={<span><b>{category.title}</b></span>}
+        subtitle={<span>{category.description}</span>}
+        actionIcon={<IconButton><StarBorder color="white" /></IconButton>}
+        onTouchTap={() => (this.props.router.push(`/category/${key}`))}
+      >
+        <img src={category.photoURL} />
+      </GridTile>
+    );
+  }
 
   render() {
     const categories = CategoryService.categoryList || {};
@@ -21,17 +39,7 @@ class Lists extends Component {
           cellHeight={180}
           style={styles.gridList}
         >
-          <Subheader>List Category</Subheader>
-          {Object.keys(categories).map((tile) => (
-            <GridTile
-              key={tile}
-              title={<span><b>{categories[tile].title}</b></span>}
-              subtitle={<span>{categories[tile].description}</span>}
-              actionIcon={<IconButton><StarBorder color="white" /></IconButton>}
-            >
-              <img src={categories[tile].photoURL} />
-            </GridTile>
-          ))}
+          {Object.keys(categories).map((key) => this.renderItemContent(key, categories[key]))}
         </GridList>
       </div>
     )

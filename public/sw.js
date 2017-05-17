@@ -1,4 +1,4 @@
-const CACHE_NAME = 'todo-app-v2';
+const CACHE_NAME = 'todo-app-vamp';
 const CACHE_URLS = [
   '/',
   '/sw.js',

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import { observer } from 'mobx-react';
+import createHistory from 'history/createBrowserHistory';
 
 import Home from './Home';
 import Login from './Login';
@@ -15,11 +16,12 @@ import Settings from './Settings';
 import NotFound from './NotFound';
 import LeftNavigation from '../components/Navigation/LeftNavigation';
 
+const history = createHistory();
 @observer
 class App extends Component {
   render() {
     return (
-      <Router>
+      <Router history={history}>
         <div>
           <Switch>
             <Route exact path="/" component={Home} />

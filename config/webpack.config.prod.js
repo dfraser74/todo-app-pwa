@@ -3,6 +3,7 @@
 var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var paths = require('./paths');
@@ -60,8 +61,7 @@ module.exports = {
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
-    filename: 'static/js/[name].js',
-    chunkFilename: 'static/js/[name].chunk.js',
+    filename: 'static/js/main.js',
     // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath
   },
@@ -201,6 +201,9 @@ module.exports = {
         minifyURLs: true
       }
     }),
+    new ScriptExtHtmlWebpackPlugin({
+      inline: 'static/js/main.js',
+    }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.
@@ -210,20 +213,6 @@ module.exports = {
     new webpack.optimize.OccurrenceOrderPlugin(),
     // Try to dedupe duplicated modules, if any:
     new webpack.optimize.DedupePlugin(),
-    // Minify the code.
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        screw_ie8: true, // React doesn't support IE8
-        warnings: false
-      },
-      mangle: {
-        screw_ie8: true
-      },
-      output: {
-        comments: false,
-        screw_ie8: true
-      }
-    }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin(cssFilename),
     // Generate a manifest file which contains a mapping of all asset filenames

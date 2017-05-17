@@ -5,7 +5,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from "react-router-dom";
 import { withRouter } from 'react-router';
-
+import { isAuthenticate } from '../../components/isAuthenticate';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -140,4 +140,4 @@ class Register extends Component {
   }
 }
 
-export default withRouter(Register)
+export default isAuthenticate(withRouter(Register));

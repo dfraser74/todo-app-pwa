@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import Form from '../../components/Settings/Form';
 import Navigation from '../../components/Navigation';
+import { isAuthenticate } from '../../components/isAuthenticate';
 import styles from './styles';
 
 class Settings extends Component {
@@ -35,4 +36,4 @@ class Settings extends Component {
   }
 }
 
-export default withRouter(Settings);
+export default withRouter(isAuthenticate(Settings));

@@ -7,6 +7,7 @@ import styles from './styles.js';
 import TaskService from '../../services/task';
 import { observer } from 'mobx-react';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import { isAuthenticate } from '../../components/isAuthenticate';
 
 @observer
 class Home extends Component {
@@ -68,4 +69,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default isAuthenticate(Home);

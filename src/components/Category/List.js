@@ -25,7 +25,7 @@ class Lists extends Component {
         actionIcon={<IconButton><StarBorder color="white" /></IconButton>}
         onTouchTap={() => (this.props.router.push(`/category/${key}`))}
       >
-        <img src={category.photoURL} />
+        <img src={category.photoURL} alt={category.title} />
       </GridTile>
     );
   }

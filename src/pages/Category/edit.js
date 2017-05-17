@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import CategoryService from '../../services/category';
 import styles from './styles.js';
 import Form from '../../components/Category/Form';
+import { isAuthenticate } from '../../components/isAuthenticate';
 
 @observer
 class EditCategory extends Component {
@@ -68,4 +69,4 @@ class EditCategory extends Component {
   }
 }
 
-export default withRouter(EditCategory);
+export default withRouter(isAuthenticate(EditCategory));

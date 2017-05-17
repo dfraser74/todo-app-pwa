@@ -8,7 +8,6 @@ import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import CircularProgress from 'material-ui/CircularProgress';
 import { withRouter } from 'react-router';
-
 import UserService from '../../services/user';
 import styles from './styles.js';
 import MarkedLogo from '../../assets/images/marked.png';
@@ -28,6 +27,12 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    if(!!UserService.info.uid) {
+      this.props.history.replace('/');
+    }
   }
 
   onSubmit(e) {

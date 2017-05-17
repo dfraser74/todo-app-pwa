@@ -12,6 +12,7 @@ import Tasks from '../../components/Task/List';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import styles from './styles.js';
 import { observable } from 'mobx';
+import { isAuthenticate } from '../../components/isAuthenticate';
 
 @observer
 class ShowCategory extends Component {
@@ -88,4 +89,4 @@ class ShowCategory extends Component {
   }
 }
 
-export default withRouter(ShowCategory);
+export default withRouter(isAuthenticate(ShowCategory));

@@ -5,6 +5,7 @@ import Form from '../../components/Task/Form';
 import styles from './style.js'
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
+import { isAuthenticate } from '../../components/isAuthenticate';
 
 class NewTask extends Component {
   static propTypes = {
@@ -36,4 +37,4 @@ class NewTask extends Component {
   }
 }
 
-export default withRouter(NewTask);
+export default withRouter(isAuthenticate(NewTask));

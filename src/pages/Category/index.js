@@ -7,6 +7,7 @@ import MdAdd from 'react-icons/lib/md/add';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import styles from './styles.js';
+import { isAuthenticate } from '../../components/isAuthenticate';
 
 @observer
 class Category extends Component {
@@ -33,4 +34,4 @@ class Category extends Component {
   }
 }
 
-export default withRouter(Category);
+export default withRouter(isAuthenticate(Category));

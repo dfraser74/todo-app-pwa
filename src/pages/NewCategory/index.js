@@ -4,6 +4,7 @@ import CategoryNavigation from '../../components/Navigation/CategoryNavigation';
 import Form from '../../components/Category/Form';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
+import { isAuthenticate } from '../../components/isAuthenticate';
 
 import styles from './styles'
 
@@ -37,4 +38,4 @@ class NewTask extends Component {
   }
 }
 
-export default withRouter(NewTask);
+export default withRouter(isAuthenticate(NewTask));

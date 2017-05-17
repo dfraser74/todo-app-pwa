@@ -6,21 +6,12 @@ import FaIconClock from 'react-icons/lib/fa/clock-o';
 import MdLocationOn from 'react-icons/lib/md/location-on';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {red500} from 'material-ui/styles/colors';
 import MdUnCheck  from 'react-icons/lib/md/check-box-outline-blank';
 import MdClose from 'react-icons/lib/md/replay';
-import MdCheck from 'react-icons/lib/md/check';
-
 import TaskService from '../../services/task';
 import styles from './style';
-
-// const styles = {
-
-// };
 
 @observer
 class Lists extends Component {
@@ -70,36 +61,6 @@ class Lists extends Component {
         {icon}
       </IconButton>
     );
-
-    // const iconButtonElement = (
-    //   <IconButton
-    //     touch={true}
-    //     onTouchTap={() => (this.onToggle(key, !completed))}
-    //   >
-    //     <MoreVertIcon />
-    //   </IconButton>
-    // );
-    // const { completed } = this.props;
-    // const title = !!completed ? 'Uncomplete' : 'Completed';
-    // const icon = !!completed ? <MdClose /> : <MdCheck />;
-
-    // return (
-    //   <IconMenu
-    //     iconButtonElement={iconButtonElement}
-    //     anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-    //     targetOrigin={{horizontal: 'right', vertical: 'top'}}
-    //   >
-    //     <MenuItem
-    //       leftIcon={icon}
-    //       onTouchTap={() => (this.onToggle(key, !completed))}
-    //     >{title}</MenuItem>
-    //     <MenuItem
-    //       primaryText="Remove"
-    //       leftIcon={<MdDelete />}
-    //       onTouchTap={() => (this.onDelete(key))}
-    //     />
-    //   </IconMenu>
-    // );
   }
 
   renderTask(task, key) {

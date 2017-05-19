@@ -2,6 +2,8 @@ const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexe
 window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 
+import { database } from '../db/firebase';
+
 class IndexedDB {
   connection;
   constructor() {
@@ -39,10 +41,17 @@ class IndexedDB {
           addNew.onsuccess = (event) => resolve({ id: key, ...data });
         } else {
           const oldCategory = checkExist.result;
-          if (oldCategory.updatedAt !== data.updatedAt) {
+
+          if (oldCategory.updatedAt < data.updatedAt) {
             const updateNew = objectStore.put({...oldCategory, ...data});
             updateNew.onerror = (event) => reject(event.result);
             updateNew.onsuccess = (event) => resolve({ id: key, ...data });
+          } else if (oldCategory.updatedAt > data.updatedAt) {
+            const newCategory = {...data, ...oldCategory};
+            database.ref(`categories/${key}`)
+              .update(newCategory)
+
+            resolve(checkExist.result);
           } else {
             resolve(checkExist.result);
           }

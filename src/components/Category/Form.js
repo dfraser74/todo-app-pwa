@@ -18,6 +18,9 @@ class Form extends Component {
     photoURL: "",
   };
 
+  @observable isSubmiting = false;
+  @observable error = {};
+
   constructor(props) {
     super(props);
     this.add = this.add.bind(this);
@@ -25,21 +28,44 @@ class Form extends Component {
   }
 
   add() {
+    const errors = {};
+    this.isSubmiting = true;
     const category = {
       ...this.category,
       title: this.category.title,
       description: this.category.description
     }
 
+    !!!category.title && (errors.title = 'Title can\' be blank');
+
+    if (Object.keys(errors).length > 0) {
+      this.error = {...errors};
+      this.isSubmiting = false;
+      return Promise.reject(errors);
+    }
+
+    this.isSubmiting = false;
     return CategoryService.onAdd(category);
   }
 
   edit(key) {
+    const errors = {};
+    this.isSubmiting = true;
     const category = {
       ...this.category,
       title: this.category.title,
       description: this.category.description
     }
+
+    !!!category.title && (errors.title = 'Title can\' be blank');
+
+    if (Object.keys(errors).length > 0) {
+      this.error = {...errors};
+      this.isSubmiting = false;
+      return Promise.reject(errors);
+    }
+
+    this.isSubmiting = false;
 
     return CategoryService.onEdit(category, key);
   }
@@ -82,7 +108,9 @@ class Form extends Component {
           value={title}
           name="title"
           floatingLabelFixed
-          hintText="Category name"
+          hintText="Category title"
+          disabled={this.isSubmiting}
+          errorText={this.error.title}
           underlineFocusStyle={styles.underlineFocusStyle}
           floatingLabelFocusStyle={{color: '#50d2c2'}}
           floatingLabelText="TITLE"
@@ -94,6 +122,7 @@ class Form extends Component {
           name="description"
           floatingLabelFixed
           hintText="Description"
+          disabled={this.isSubmiting}
           underlineFocusStyle={styles.underlineFocusStyle}
           floatingLabelFocusStyle={{color: '#50d2c2'}}
           floatingLabelText="DESCRIPTION"

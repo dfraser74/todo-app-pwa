@@ -106,12 +106,13 @@ class Task {
   onToggle(key, value) {
     const updatedAt = Date.now();
     const updatedBy = UserService.info.uid;
-    const task = { completed: value, updatedAt, updatedBy };
+    const taskList = {...this.taskList};
+    const task = { ...taskList[key], completed: value, updatedAt, updatedBy };
+
     return new Promise((resolve, reject) => {
       if (!Network.check) {
         IndexDb.addTask(task, key)
               .then((res, ...args) => {
-                const taskList = {...this.taskList};
                 taskList[key] = {...taskList[key], ...task};
                 this.taskList = taskList;
                 resolve(res, ...args);
@@ -126,10 +127,27 @@ class Task {
 
   onAdd(task) {
     const createdAt = Date.now();
-    const updatedAt = Date.now();
     const createdBy = UserService.info.uid;
-    const updatedBy = UserService.info.uid;
-    return database.ref('/tasks').push({ ...task, createdAt, updatedAt, createdBy, updatedBy });
+    const key = createdAt;
+    const newTask = { ...task, createdAt, updatedAt: createdAt, createdBy, updatedBy: createdBy };
+
+    return new Promise((resolve, reject) => {
+      if (!Network.check) {
+        newTask.isOff = true;
+        IndexDb.addTask(newTask, key)
+              .then((res, ...args) => {
+                localStorage.setItem('syncLocalToServer', true);
+                const taskList = {...this.taskList};
+                taskList[key] = {...taskList[key], ...newTask};
+                this.taskList = taskList;
+                resolve(res, ...args);
+              }).catch(reject);
+      } else {
+        return database.ref('tasks')
+                .push(newTask)
+                .then(resolve).catch(reject);
+      }
+    })
   }
 
   onDelete(key) {

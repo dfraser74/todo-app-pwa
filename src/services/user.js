@@ -1,7 +1,9 @@
-import { auth, database, storage } from '../db/firebase';
 import { observable, autorun } from 'mobx';
+import firebase from 'firebase/app'
 import IndexDb from './indexDb';
 import Network from './network';
+
+import { auth, database, storage } from '../db/firebase';
 
 const fields = ['uid', 'email', 'photoURL', 'displayName', 'refreshToken', 'emailVerified', 'birthday', 'gender', 'notifications'];
 
@@ -51,6 +53,40 @@ class User {
       .signInWithEmailAndPassword(email, password)
       .then((user) => callback(null))
       .catch(callback)
+  }
+
+  onSocial(social, callback) {
+    const provider = this.onSocialProvider(social);
+
+    if (!provider || !['facebook', 'google'].includes(social)) {
+      return callback({ message: `Don't support social: ${social}`});
+    }
+
+    auth.signInWithPopup(provider)
+    .then((authData) => {
+      const user = authData.user;
+      const { displayName, email, photoURL, refreshToken } = user;
+
+      const profile = { birthday: Date.now(), gender: 'male', notifications: true, displayName, email, photoURL, refreshToken };
+
+      database.ref(`/users/${user.uid}`).update(profile);
+
+      callback(null);
+    })
+    .catch(callback)
+  }
+
+  onSocialProvider(social) {
+    switch(social) {
+      case 'facebook':
+        const provider = new firebase.auth.FacebookAuthProvider();
+        provider.addScope('email');
+        return provider;
+      case 'google':
+        return new firebase.auth.GoogleAuthProvider();
+      default:
+        return null;
+    }
   }
 
   onLogout() {

@@ -25,6 +25,9 @@ class Category {
         return;
       } else {
         this.database = null;
+        if (localStorage.getItem('syncLocalToServer')) {
+          IndexDb.syncLocalToServer(UserService.info.uid);
+        }
       }
 
       this.database = database.ref('categories').on('value', (snapshot) => {
@@ -72,9 +75,27 @@ class Category {
 
   onAdd(category) {
     const createdAt = Date.now();
-    const updatedAt = Date.now();
     const createdBy = UserService.info.uid;
-    return database.ref('categories').push({ ...category, createdAt, updatedAt, createdBy, updatedBy: createdBy });
+    const key = createdAt;
+    const newCategory = { ...category, createdAt, updatedAt: createdAt, createdBy, updatedBy: createdBy };
+
+    return new Promise((resolve, reject) => {
+      if (!Network.check) {
+        newCategory.isOff = true;
+        IndexDb.addCategory(newCategory, key)
+              .then((res, ...args) => {
+                localStorage.setItem('syncLocalToServer', true);
+                const categoryList = {...this.categoryList};
+                categoryList[key] = {...categoryList[key], ...newCategory};
+                this.categoryList = categoryList;
+                resolve(res, ...args);
+              }).catch(reject);
+      } else {
+        return database.ref('categories')
+                .push(newCategory)
+                .then(resolve).catch(reject);
+      }
+    })
   }
 
   onEdit(category, key) {

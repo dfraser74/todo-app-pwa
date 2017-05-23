@@ -74,4 +74,9 @@ export default {
     margin: 'auto',
     alignSelf: 'center',
   },
+  social: {
+    marginTop: 10,
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
 };

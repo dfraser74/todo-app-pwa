@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
-require('firebase/auth');
-require('firebase/storage');
-require('firebase/database');
+import 'firebase/database';
+import 'firebase/storage';
+import 'firebase/auth';
 
 const config = {
   apiKey: process.env.FIREBASE_KEY,

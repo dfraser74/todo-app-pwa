@@ -11,6 +11,8 @@ import { withRouter } from 'react-router';
 import UserService from '../../services/user';
 import styles from './styles.js';
 import MarkedLogo from '../../assets/images/marked.png';
+import FbIcon from 'react-icons/lib/fa/facebook-square';
+import GGIcon from 'react-icons/lib/fa/google-plus-square';
 
 @observer
 class Login extends Component {
@@ -27,6 +29,7 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onSocial = this.onSocial.bind(this);
   }
 
   componentDidMount() {
@@ -57,6 +60,17 @@ class Login extends Component {
       this.isSubmit = false;
       !!error && (this.errorText = error.message);
 
+      if (!error) {
+        return this.props.history.replace('/');
+      }
+    });
+  }
+
+  onSocial(social, e) {
+    e.preventDefault();
+    UserService.onSocial(social, (error) => {
+      this.isSubmit = false;
+      !!error && (this.errorText = error.message);
       if (!error) {
         return this.props.history.replace('/');
       }
@@ -110,6 +124,26 @@ class Login extends Component {
             backgroundColor="#50D2C2"
             onTouchTap={this.onSubmit}
           />
+          <div style={styles.social}>
+            <RaisedButton
+              {...styles.btn}
+              label="via Facebook"
+              name="facebook"
+              labelColor="#FFFFFF"
+              backgroundColor="#4862a3"
+              icon={<FbIcon color="#FFFFFF" size={30} />}
+              onTouchTap={(e) => this.onSocial('facebook', e)}
+            />
+            <RaisedButton
+              {...styles.btn}
+              label="via Google"
+              name="google"
+              labelColor="#FFFFFF"
+              backgroundColor="#df4a32"
+              icon={<GGIcon color="#FFFFFF" size={30} />}
+              onTouchTap={(e) => this.onSocial('google', e)}
+            />
+          </div>
         </form>
         <div
           style={styles.footer}
